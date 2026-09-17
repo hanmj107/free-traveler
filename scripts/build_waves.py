@@ -495,21 +495,72 @@ def write_wave_plan_md(waves: list[dict], tasks: list[dict], contract: dict | No
     WAVE_PLAN_MD.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def load_existing_wave_state() -> dict:
+    """.claude/commands/run-wave.md가 실행 중 WAVE_STATE.json의 status·task_status·
+    checkpoint_result를 갱신해 나간다. build_waves.py를 나중에 다시 실행해도(Task List가
+    바뀌어 Wave 구성이 재계산되어도) 이미 진행된 실행 상태를 조용히 지우지 않도록,
+    기존 파일에서 Task별 상태와 Wave별 checkpoint_result를 먼저 걷어 온다."""
+    if not WAVE_STATE_JSON.exists():
+        return {"task_status": {}, "checkpoint_result_by_wave": {}}
+    try:
+        data = json.loads(WAVE_STATE_JSON.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {"task_status": {}, "checkpoint_result_by_wave": {}}
+    task_status: dict[str, str] = {}
+    checkpoint_result_by_wave: dict[str, object] = {}
+    for w in data.get("waves", []):
+        checkpoint_result_by_wave[w.get("wave_id", "")] = w.get("checkpoint_result")
+        for tid, status in (w.get("task_status") or {}).items():
+            task_status[tid] = status
+    return {"task_status": task_status, "checkpoint_result_by_wave": checkpoint_result_by_wave}
+
+
 def write_wave_state_json(waves: list[dict], timestamp: str) -> None:
+    """
+    waves[].task_status는 "WAVE_STATE.json 최소 필드" 요청 이후 .claude/commands/run-wave.md가
+    Task 단위 진행 상태(pending/in_progress/blocked/completed)를 기록할 곳이 필요해 추가한
+    확장 필드다(schema_version은 그대로 traveler-wave-state-v1을 유지한다 — 필드 추가는
+    하위 호환을 깨지 않는다). waves[].status는 이 Task별 상태에서 파생시킨다:
+    전부 completed면 completed, 하나라도 blocked면 blocked, 하나라도 in_progress/completed가
+    섞여 있으면 in_progress, 그 외에는 pending. Preview Checkpoint가 필요한 Wave는 Task가
+    전부 completed여도 checkpoint_result가 "CONFIRMED"가 아니면 completed로 올리지 않는다
+    (루트 CLAUDE.md 규칙 22 — 사람 확인 전에는 완료로 취급하지 않는다).
+    """
+    existing = load_existing_wave_state()
+    old_task_status = existing["task_status"]
+    old_checkpoint_result = existing["checkpoint_result_by_wave"]
+
+    wave_objs = []
+    for w in waves:
+        task_status = {tid: old_task_status.get(tid, "pending") for tid in w["task_ids"]}
+        statuses = set(task_status.values())
+        if statuses == {"completed"}:
+            wave_status = "completed"
+        elif "blocked" in statuses:
+            wave_status = "blocked"
+        elif "in_progress" in statuses or "completed" in statuses:
+            wave_status = "in_progress"
+        else:
+            wave_status = "pending"
+
+        checkpoint_result = old_checkpoint_result.get(w["wave_id"]) if w["checkpoint_required"] else None
+        if w["checkpoint_required"] and wave_status == "completed" and checkpoint_result != "CONFIRMED":
+            wave_status = "in_progress"
+
+        wave_objs.append({
+            "wave_id": w["wave_id"],
+            "title": w["group_title"],
+            "task_ids": w["task_ids"],
+            "status": wave_status,
+            "checkpoint_required": w["checkpoint_required"],
+            "checkpoint_result": checkpoint_result,
+            "task_status": task_status,
+        })
+
     payload = {
         "schema_version": "traveler-wave-state-v1",
         "generated_at": timestamp,
-        "waves": [
-            {
-                "wave_id": w["wave_id"],
-                "title": w["group_title"],
-                "task_ids": w["task_ids"],
-                "status": "pending",
-                "checkpoint_required": w["checkpoint_required"],
-                "checkpoint_result": None,
-            }
-            for w in waves
-        ],
+        "waves": wave_objs,
     }
     WAVE_STATE_JSON.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 

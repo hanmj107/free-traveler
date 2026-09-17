@@ -1,6 +1,6 @@
 # Free Traveler — Wave Plan
 
-- **생성 시각(UTC):** 2026-09-16T12:36:24.678477+00:00
+- **생성 시각(UTC):** 2026-09-17T11:40:51.835175+00:00
 - **생성 스크립트:** `scripts/build_waves.py`(자동 생성) — `TASKS/TASK_MANIFEST.csv`의 Depends On을 기준으로
   계산한 제안이다. `/run-wave`로 실행을 시작하기 전에 사람이 한 번 훑어보길 권장한다
   (`docs/DECISION_LOG.md` DEC-010: Wave 경계는 사람이 최종 확인한다).

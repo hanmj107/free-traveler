@@ -1,0 +1,15 @@
+node_modules
+.next
+out
+build
+public
+package-lock.json
+next-env.d.ts
+*.tsbuildinfo
+
+# 요구사항·Task·Wave·거버넌스 문서는 format:check 대상이 아니다(자유 서식 유지).
+docs
+TASKS
+design-reference
+.claude
+*.md

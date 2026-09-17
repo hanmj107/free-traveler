@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: "24"
+
+jobs:
+  # Job 1 — Lint·타입체크·Unit Test·Task/Screen 계약 검사·Build.
+  # Supabase Secret이나 실제 인증 정보를 전혀 요구하지 않는다(요구하는 코드도 아직 없다).
+  quality:
+    name: quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm run test:unit
+
+      - name: Task contract
+        run: npm run task:contract
+
+      - name: Screen contract
+        run: npm run screen:contract -- --mode=ci
+
+      - name: Build
+        run: npm run build
+
+  # Job 2 — 로그인이 필요 없는 공개 화면 Playwright(Chromium) Smoke만 실행한다.
+  # Supabase Secret 없이도 통과해야 하므로 인증 관련 환경변수를 설정하지 않는다.
+  # 인증이 필요한 Smoke(E2E-006~007, tests/e2e/auth-smoke.spec.ts)는 이 Workflow의
+  # 필수 Gate에 포함하지 않는다(E2E_TEST_USER_EMAIL/PASSWORD가 없으면 그 파일 자체가
+  # 스스로 skip한다 — tests/e2e/auth-smoke.spec.ts 참고).
+  public-smoke:
+    name: public-smoke
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Public smoke (Chromium)
+        run: npm run test:e2e:public
+
+      - name: Upload Playwright report (on failure only)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
