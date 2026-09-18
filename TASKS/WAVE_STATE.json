@@ -78,15 +78,15 @@
         "API-MATE-POSTS",
         "API-REPORTS"
       ],
-      "status": "in_progress",
+      "status": "completed",
       "checkpoint_required": false,
       "checkpoint_result": null,
       "task_status": {
-        "API-BLOCKS": "pending",
+        "API-BLOCKS": "completed",
         "API-EXTERNAL-URLS": "completed",
-        "API-MATE-APPLICATIONS": "pending",
+        "API-MATE-APPLICATIONS": "completed",
         "API-MATE-POSTS": "completed",
-        "API-REPORTS": "pending"
+        "API-REPORTS": "completed"
       }
     },
     {
