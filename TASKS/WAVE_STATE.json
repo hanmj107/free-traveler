@@ -223,14 +223,14 @@
         "COMP-SCR004-FILTER",
         "COMP-SCR004-GUIDE-SAFETY"
       ],
-      "status": "pending",
+      "status": "completed",
       "checkpoint_required": false,
       "checkpoint_result": null,
       "task_status": {
-        "COMP-SCR004-BLOCK": "pending",
-        "COMP-SCR004-DETAIL": "pending",
-        "COMP-SCR004-FILTER": "pending",
-        "COMP-SCR004-GUIDE-SAFETY": "pending"
+        "COMP-SCR004-BLOCK": "completed",
+        "COMP-SCR004-DETAIL": "completed",
+        "COMP-SCR004-FILTER": "completed",
+        "COMP-SCR004-GUIDE-SAFETY": "completed"
       }
     },
     {
@@ -242,14 +242,14 @@
         "COMP-SCR004-LIST",
         "COMP-SCR004-REPORT"
       ],
-      "status": "pending",
+      "status": "completed",
       "checkpoint_required": false,
       "checkpoint_result": null,
       "task_status": {
-        "COMP-SCR004-INTRO-CTA": "pending",
-        "COMP-SCR004-JOIN-REQUEST": "pending",
-        "COMP-SCR004-LIST": "pending",
-        "COMP-SCR004-REPORT": "pending"
+        "COMP-SCR004-INTRO-CTA": "completed",
+        "COMP-SCR004-JOIN-REQUEST": "completed",
+        "COMP-SCR004-LIST": "completed",
+        "COMP-SCR004-REPORT": "completed"
       }
     },
     {
@@ -258,11 +258,11 @@
       "task_ids": [
         "PAGE-SCR004"
       ],
-      "status": "pending",
+      "status": "completed",
       "checkpoint_required": true,
-      "checkpoint_result": null,
+      "checkpoint_result": "CONFIRMED",
       "task_status": {
-        "PAGE-SCR004": "pending"
+        "PAGE-SCR004": "completed"
       }
     },
     {
@@ -331,7 +331,7 @@
       "task_status": {
         "TEST-RLS-BASIC": "pending",
         "UNIT-CONTACT-DETECTION": "completed",
-        "UNIT-MATE-STATE": "pending",
+        "UNIT-MATE-STATE": "completed",
         "UNIT-TRAVEL-DATES": "completed"
       }
     },

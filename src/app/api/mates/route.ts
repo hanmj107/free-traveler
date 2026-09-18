@@ -4,9 +4,13 @@ import { isAdultVerified } from "@/lib/auth/adultVerification";
 import { computeMatePostDisplayStatus } from "@/lib/supabase/server";
 
 /**
- * 모집글 생성/조회(REQ-FUNC-MATE-002/003/008/009). 공개·모집중 글만 비회원에게도
- * 노출하고(마감 상태는 조회 시점 계산), 생성은 로그인+성인확인 완료 사용자만 가능하며
- * 안전수칙 동의와 연락처 미포함(SEC-008/MATE-009)을 서버에서 재검증한다.
+ * 모집글 생성/조회(REQ-FUNC-MATE-002/003/008/009). 공개 글은 비회원에게도 노출하며,
+ * 모집중/마감 상태는 저장된 status가 아니라 조회 시점에 end_date와 비교해 계산한다
+ * (MATE-008, 배치 없음). SCR-004의 "모집 상태" Filter가 마감 글도 함께 보여줄 수
+ * 있어야 하므로 목록 API 자체는 모든 글을 반환하고, 모집중만 보이게 좁히는 것은
+ * 클라이언트(COMP-SCR004-FILTER)의 역할로 둔다. 생성은 로그인+성인확인 완료
+ * 사용자만 가능하며 안전수칙 동의와 연락처 미포함(SEC-008/MATE-009)을 서버에서
+ * 재검증한다.
  */
 
 const REQUIRED_FIELDS = [
@@ -53,12 +57,10 @@ export async function GET() {
     );
   }
 
-  const posts = (data ?? [])
-    .map((post) => ({
-      ...post,
-      status: computeMatePostDisplayStatus(post),
-    }))
-    .filter((post) => post.status === "RECRUITING");
+  const posts = (data ?? []).map((post) => ({
+    ...post,
+    status: computeMatePostDisplayStatus(post),
+  }));
 
   return NextResponse.json({ posts });
 }
