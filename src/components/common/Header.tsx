@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { createSupabaseBrowserClient } from "@/lib/auth/supabaseAuth";
+import { createClient as createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 /**
  * 공통 Header(5개 Screen 전체 재사용, design-reference/D-001/DESIGN.md §9).

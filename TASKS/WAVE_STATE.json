@@ -152,17 +152,17 @@
         "COMP-SCR002-PROFILE-HERO",
         "COMP-SCR002-TIMELINE"
       ],
-      "status": "pending",
+      "status": "completed",
       "checkpoint_required": false,
       "checkpoint_result": null,
       "task_status": {
-        "COMP-SCR002-COUNTRY-CHIPS": "pending",
-        "COMP-SCR002-GALLERY": "pending",
-        "COMP-SCR002-MEMORABLE-CTA": "pending",
-        "COMP-SCR002-METRICS": "pending",
-        "COMP-SCR002-PHILOSOPHY": "pending",
-        "COMP-SCR002-PROFILE-HERO": "pending",
-        "COMP-SCR002-TIMELINE": "pending"
+        "COMP-SCR002-COUNTRY-CHIPS": "completed",
+        "COMP-SCR002-GALLERY": "completed",
+        "COMP-SCR002-MEMORABLE-CTA": "completed",
+        "COMP-SCR002-METRICS": "completed",
+        "COMP-SCR002-PHILOSOPHY": "completed",
+        "COMP-SCR002-PROFILE-HERO": "completed",
+        "COMP-SCR002-TIMELINE": "completed"
       }
     },
     {
@@ -171,11 +171,11 @@
       "task_ids": [
         "PAGE-SCR002"
       ],
-      "status": "pending",
+      "status": "completed",
       "checkpoint_required": true,
-      "checkpoint_result": null,
+      "checkpoint_result": "CONFIRMED",
       "task_status": {
-        "PAGE-SCR002": "pending"
+        "PAGE-SCR002": "completed"
       }
     },
     {

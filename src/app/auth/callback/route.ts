@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createSupabaseServerClient } from "@/lib/auth/supabaseAuth";
+import { createClient as createSupabaseServerClient } from "@/lib/supabase/server";
 
 /**
  * Supabase Auth 인증 콜백(기술 Route — design-reference/SCREEN_ROUTE_CONTRACT.json의

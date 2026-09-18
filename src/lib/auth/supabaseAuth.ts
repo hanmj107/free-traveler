@@ -1,59 +1,16 @@
-import { createBrowserClient, createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 /**
- * Supabase Auth(이메일) 클라이언트 생성 + 회원가입/로그인/로그아웃/세션 조회.
+ * Supabase Auth(이메일) 회원가입/로그인/로그아웃/세션 조회 Helper.
  * docs/PROJECT_SCOPE.md §3 "인증·개인정보" 원칙: 비밀번호는 Supabase Auth에 위임하며
  * 이 프로젝트는 비밀번호를 직접 저장·처리하지 않는다(REQ-NFR-SEC-001, HTTPS 전제).
+ *
+ * Client 인스턴스 생성은 이 파일이 직접 하지 않는다 — 브라우저/서버 Client는
+ * DB-ACCESS(`@/lib/supabase/client`, `@/lib/supabase/server`)가 제공하며, 이 파일의
+ * 함수들은 그 Client를 인자로 받아 동작한다. (이렇게 분리하지 않으면 `next/headers`를
+ * 쓰는 서버 Client 생성 코드가 같은 모듈에 섞여 있어 Client Component에서 이 파일을
+ * import할 때 Turbopack 빌드 오류가 발생한다 — 실제로 COMP-COMMON-HEADER 구현 중 발견됨.)
  */
-
-function requireEnv(
-  name: "NEXT_PUBLIC_SUPABASE_URL" | "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-) {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(
-      `${name} 환경변수가 설정되지 않았습니다. .env.local을 확인하세요.`,
-    );
-  }
-  return value;
-}
-
-/** Client Component에서 사용하는 브라우저 Supabase Client. */
-export function createSupabaseBrowserClient(): SupabaseClient {
-  return createBrowserClient(
-    requireEnv("NEXT_PUBLIC_SUPABASE_URL"),
-    requireEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
-  );
-}
-
-/** Server Component/Route Handler에서 사용하는 서버 Supabase Client(쿠키 세션 연동). */
-export async function createSupabaseServerClient(): Promise<SupabaseClient> {
-  const cookieStore = await cookies();
-
-  return createServerClient(
-    requireEnv("NEXT_PUBLIC_SUPABASE_URL"),
-    requireEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            for (const { name, value, options } of cookiesToSet) {
-              cookieStore.set(name, value, options);
-            }
-          } catch {
-            // Server Component에서 호출되면 쿠키 쓰기가 불가능하다 — 세션 갱신은
-            // middleware/Route Handler에서 처리되므로 여기서는 무시해도 안전하다.
-          }
-        },
-      },
-    },
-  );
-}
 
 export interface SignUpParams {
   email: string;
