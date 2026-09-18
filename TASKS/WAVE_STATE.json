@@ -85,7 +85,7 @@
         "API-BLOCKS": "pending",
         "API-EXTERNAL-URLS": "completed",
         "API-MATE-APPLICATIONS": "pending",
-        "API-MATE-POSTS": "pending",
+        "API-MATE-POSTS": "completed",
         "API-REPORTS": "pending"
       }
     },
@@ -189,7 +189,7 @@
         "COMP-SCR003-MATE-COMPOSE",
         "COMP-SCR003-TIPS"
       ],
-      "status": "in_progress",
+      "status": "completed",
       "checkpoint_required": false,
       "checkpoint_result": null,
       "task_status": {
@@ -197,7 +197,7 @@
         "COMP-SCR003-HOTEL-FORM": "completed",
         "COMP-SCR003-INTRO-TABS": "completed",
         "COMP-SCR003-LOGIN-GUARD": "completed",
-        "COMP-SCR003-MATE-COMPOSE": "pending",
+        "COMP-SCR003-MATE-COMPOSE": "completed",
         "COMP-SCR003-TIPS": "completed"
       }
     },
@@ -207,11 +207,11 @@
       "task_ids": [
         "PAGE-SCR003"
       ],
-      "status": "in_progress",
+      "status": "completed",
       "checkpoint_required": true,
-      "checkpoint_result": null,
+      "checkpoint_result": "CONFIRMED",
       "task_status": {
-        "PAGE-SCR003": "in_progress"
+        "PAGE-SCR003": "completed"
       }
     },
     {
@@ -330,7 +330,7 @@
       "checkpoint_result": null,
       "task_status": {
         "TEST-RLS-BASIC": "pending",
-        "UNIT-CONTACT-DETECTION": "pending",
+        "UNIT-CONTACT-DETECTION": "completed",
         "UNIT-MATE-STATE": "pending",
         "UNIT-TRAVEL-DATES": "completed"
       }
