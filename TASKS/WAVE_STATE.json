@@ -59,13 +59,13 @@
         "COMP-COMMON-HEADER",
         "DB-ACCESS"
       ],
-      "status": "blocked",
+      "status": "completed",
       "checkpoint_required": false,
       "checkpoint_result": null,
       "task_status": {
-        "AUTH-ADULT-VERIFICATION": "blocked",
-        "COMP-COMMON-HEADER": "pending",
-        "DB-ACCESS": "pending"
+        "AUTH-ADULT-VERIFICATION": "completed",
+        "COMP-COMMON-HEADER": "completed",
+        "DB-ACCESS": "completed"
       }
     },
     {
