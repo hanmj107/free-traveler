@@ -42,13 +42,13 @@
         "DB-RLS-BASE",
         "DB-SEED-BASE"
       ],
-      "status": "blocked",
+      "status": "completed",
       "checkpoint_required": false,
       "checkpoint_result": null,
       "task_status": {
-        "AUTH-SUPABASE-CLIENT": "blocked",
-        "DB-RLS-BASE": "pending",
-        "DB-SEED-BASE": "pending"
+        "AUTH-SUPABASE-CLIENT": "completed",
+        "DB-RLS-BASE": "completed",
+        "DB-SEED-BASE": "completed"
       }
     },
     {
@@ -59,11 +59,11 @@
         "COMP-COMMON-HEADER",
         "DB-ACCESS"
       ],
-      "status": "pending",
+      "status": "blocked",
       "checkpoint_required": false,
       "checkpoint_result": null,
       "task_status": {
-        "AUTH-ADULT-VERIFICATION": "pending",
+        "AUTH-ADULT-VERIFICATION": "blocked",
         "COMP-COMMON-HEADER": "pending",
         "DB-ACCESS": "pending"
       }
