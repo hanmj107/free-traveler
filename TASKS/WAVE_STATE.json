@@ -274,14 +274,14 @@
         "COMP-SCR005-MY-ACTIVITY",
         "COMP-SCR005-PROFILE"
       ],
-      "status": "pending",
+      "status": "completed",
       "checkpoint_required": false,
       "checkpoint_result": null,
       "task_status": {
-        "COMP-SCR005-ADMIN": "pending",
-        "COMP-SCR005-AUTH": "pending",
-        "COMP-SCR005-MY-ACTIVITY": "pending",
-        "COMP-SCR005-PROFILE": "pending"
+        "COMP-SCR005-ADMIN": "completed",
+        "COMP-SCR005-AUTH": "completed",
+        "COMP-SCR005-MY-ACTIVITY": "completed",
+        "COMP-SCR005-PROFILE": "completed"
       }
     },
     {
@@ -290,11 +290,11 @@
       "task_ids": [
         "PAGE-SCR005"
       ],
-      "status": "pending",
+      "status": "completed",
       "checkpoint_required": true,
-      "checkpoint_result": null,
+      "checkpoint_result": "CONFIRMED",
       "task_status": {
-        "PAGE-SCR005": "pending"
+        "PAGE-SCR005": "completed"
       }
     },
     {
