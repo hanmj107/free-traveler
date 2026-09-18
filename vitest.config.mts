@@ -1,13 +1,22 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
 // Traveler Unit Test 범위: src 내부에 있는 Unit Test와 tests/unit만 검색한다.
 // tests/e2e(Playwright 전용 디렉터리)는 절대 검색하지 않는다 — Vitest가 Playwright
 // 스펙 파일을 잘못 집어 실행하는 것을 방지한다.
 //
-// 아직 Unit Test 파일이 하나도 없는 단계이므로 passWithNoTests: true로 두어,
-// `npm run test:unit`(scripts/audit_tasks.py의 UNIT-TRAVEL-DATES 등 Task가
-// 구현되기 전까지)이 실패가 아니라 정상 종료로 처리되게 한다.
+// passWithNoTests: true는 유지한다 — Unit Test Task가 아직 없는 단계에서도
+// `npm run test:unit`이 실패가 아니라 정상 종료로 처리되어야 하기 때문이다.
+//
+// resolve.alias는 tsconfig.json의 "@/*" -> "./src/*"와 동일하게 맞춘다. Vitest는
+// tsconfig paths를 자동으로 읽지 않으므로, src 코드를 "@/..."로 import하는 Unit
+// Test(예: tests/unit/travelDates.spec.ts)가 실행되려면 이 alias가 반드시 필요하다.
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
   test: {
     environment: "node",
     include: [

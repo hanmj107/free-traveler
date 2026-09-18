@@ -50,40 +50,87 @@ test.describe("E2E-002 대표 소개 핵심 정보", () => {
   });
 });
 
+// 항공/숙소 폼 모두 출발일(또는 체크인)을 내일 날짜로 채워야 "과거 날짜" 검증을 피할 수 있다.
+function tomorrowDateInputValue(): string {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  return tomorrow.toISOString().slice(0, 10);
+}
+
 test.describe("E2E-003 여행 도구 — 항공 외부 이동 안내", () => {
-  test("항공편 보러 가기 링크가 새 탭·href를 갖는다", async ({ page }) => {
+  test("유효한 입력 후 확인 Dialog를 거쳐 새 탭이 열린다", async ({ page }) => {
     await page.goto("/travel-tools");
 
-    const flightTab = getTabButton(page, /항공/);
-    if ((await flightTab.count()) > 0) {
-      await flightTab.first().click();
-    }
+    // REQ-FUNC-FLIGHT-001~004: 필수 4개 필드를 채우기 전에는 이동 버튼이 비활성화된다.
+    const searchButton = page.getByRole("button", {
+      name: /항공편\s*보러\s*가기/,
+    });
+    await expect(searchButton).toBeDisabled();
 
-    // REQ-FUNC-FLIGHT-004: "항공편 보러 가기" 선택 시 외부 항공 사이트를 새 탭(target=_blank,
-    // rel=noopener noreferrer)으로 연다. 실제 외부 사이트 이동·내용 검사는 하지 않는다.
-    const flightCta = page.getByRole("link", { name: /항공편\s*보러\s*가기/ });
-    await expect(flightCta).toBeVisible();
-    await expect(flightCta).toHaveAttribute("target", "_blank");
-    await expect(flightCta).toHaveAttribute("rel", /noopener/);
-    await expect(flightCta).toHaveAttribute("href", /.+/);
+    const tomorrow = tomorrowDateInputValue();
+    await page.getByLabel("국가").fill("일본");
+    await page.getByLabel("지역").fill("도쿄");
+    await page.getByLabel("출발일").fill(tomorrow);
+    await page.getByLabel("귀국일").fill(tomorrow);
+
+    await expect(searchButton).toBeEnabled();
+    await searchButton.click();
+
+    // 외부 이동 전 안내 Dialog: 입력값이 외부로 전달되지 않는다는 고지를 포함한다.
+    const dialog = page.getByRole("dialog", {
+      name: /항공편\s*외부\s*이동\s*확인/,
+    });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByText(/전달되지\s*않습니다/)).toBeVisible();
+
+    // 확인 시 새 탭(target=_blank·noopener 상당)이 열린다. 실제 외부 사이트 내용은 검사하지 않는다.
+    const [popup] = await Promise.all([
+      page.waitForEvent("popup"),
+      dialog.getByRole("button", { name: /항공편\s*보러\s*가기/ }).click(),
+    ]);
+    expect(popup.url()).toMatch(/^https?:\/\//);
+    await popup.close();
   });
 });
 
 test.describe("E2E-004 여행 도구 — 숙소 외부 이동 안내", () => {
-  test("호텔 보러 가기 링크가 새 탭·href를 갖는다", async ({ page }) => {
+  test("유효한 입력 후 확인 Dialog를 거쳐 새 탭이 열린다", async ({ page }) => {
     await page.goto("/travel-tools");
 
     const hotelTab = getTabButton(page, /숙소|호텔/);
-    if ((await hotelTab.count()) > 0) {
-      await hotelTab.first().click();
-    }
+    await hotelTab.first().click();
 
-    // REQ-FUNC-HOTEL-004: "호텔 보러 가기" 선택 시 외부 호텔 사이트를 새 탭으로 연다.
-    const hotelCta = page.getByRole("link", { name: /호텔\s*보러\s*가기/ });
-    await expect(hotelCta).toBeVisible();
-    await expect(hotelCta).toHaveAttribute("target", "_blank");
-    await expect(hotelCta).toHaveAttribute("rel", /noopener/);
-    await expect(hotelCta).toHaveAttribute("href", /.+/);
+    // REQ-FUNC-HOTEL-001~004: 필수 4개 필드를 채우기 전에는 이동 버튼이 비활성화된다.
+    const searchButton = page.getByRole("button", {
+      name: /숙소\s*보러\s*가기/,
+    });
+    await expect(searchButton).toBeDisabled();
+
+    const checkIn = tomorrowDateInputValue();
+    const checkOutDate = new Date();
+    checkOutDate.setDate(checkOutDate.getDate() + 2);
+    const checkOut = checkOutDate.toISOString().slice(0, 10);
+
+    await page.getByLabel("국가").fill("태국");
+    await page.getByLabel("지역").fill("방콕");
+    await page.getByLabel("체크인").fill(checkIn);
+    await page.getByLabel("체크아웃").fill(checkOut);
+
+    await expect(searchButton).toBeEnabled();
+    await searchButton.click();
+
+    const dialog = page.getByRole("dialog", {
+      name: /숙소\s*외부\s*이동\s*확인/,
+    });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByText(/전달되지\s*않습니다/)).toBeVisible();
+
+    const [popup] = await Promise.all([
+      page.waitForEvent("popup"),
+      dialog.getByRole("button", { name: /숙소\s*보러\s*가기/ }).click(),
+    ]);
+    expect(popup.url()).toMatch(/^https?:\/\//);
+    await popup.close();
   });
 });
 
