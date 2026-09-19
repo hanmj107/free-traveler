@@ -98,14 +98,14 @@
         "COMP-SCR001-DEST-DRAWER",
         "COMP-SCR001-DEST-GLOBAL"
       ],
-      "status": "pending",
+      "status": "completed",
       "checkpoint_required": false,
       "checkpoint_result": null,
       "task_status": {
-        "COMP-SCR001-ABOUT-SUMMARY": "pending",
-        "COMP-SCR001-DEST-DOMESTIC": "pending",
-        "COMP-SCR001-DEST-DRAWER": "pending",
-        "COMP-SCR001-DEST-GLOBAL": "pending"
+        "COMP-SCR001-ABOUT-SUMMARY": "completed",
+        "COMP-SCR001-DEST-DOMESTIC": "completed",
+        "COMP-SCR001-DEST-DRAWER": "completed",
+        "COMP-SCR001-DEST-GLOBAL": "completed"
       }
     },
     {
@@ -117,14 +117,14 @@
         "COMP-SCR001-SAFETY-CARDS",
         "COMP-SCR001-THEME-CHIPS"
       ],
-      "status": "pending",
+      "status": "completed",
       "checkpoint_required": false,
       "checkpoint_result": null,
       "task_status": {
-        "COMP-SCR001-HERO-SEARCH": "pending",
-        "COMP-SCR001-MATE-SUMMARY": "pending",
-        "COMP-SCR001-SAFETY-CARDS": "pending",
-        "COMP-SCR001-THEME-CHIPS": "pending"
+        "COMP-SCR001-HERO-SEARCH": "completed",
+        "COMP-SCR001-MATE-SUMMARY": "completed",
+        "COMP-SCR001-SAFETY-CARDS": "completed",
+        "COMP-SCR001-THEME-CHIPS": "completed"
       }
     },
     {
@@ -133,11 +133,11 @@
       "task_ids": [
         "PAGE-SCR001"
       ],
-      "status": "pending",
+      "status": "completed",
       "checkpoint_required": true,
-      "checkpoint_result": null,
+      "checkpoint_result": "CONFIRMED",
       "task_status": {
-        "PAGE-SCR001": "pending"
+        "PAGE-SCR001": "completed"
       }
     },
     {
@@ -306,13 +306,13 @@
         "E2E-PUBLIC-SMOKE",
         "E2E-TRAVEL-TOOLS"
       ],
-      "status": "blocked",
+      "status": "in_progress",
       "checkpoint_required": false,
       "checkpoint_result": null,
       "task_status": {
-        "CHECK-MANUAL-ACCESSIBILITY": "blocked",
+        "CHECK-MANUAL-ACCESSIBILITY": "pending",
         "E2E-MATE-AUTH": "completed",
-        "E2E-PUBLIC-SMOKE": "blocked",
+        "E2E-PUBLIC-SMOKE": "completed",
         "E2E-TRAVEL-TOOLS": "completed"
       }
     },

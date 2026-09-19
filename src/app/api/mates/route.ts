@@ -10,7 +10,8 @@ import { computeMatePostDisplayStatus } from "@/lib/supabase/server";
  * 있어야 하므로 목록 API 자체는 모든 글을 반환하고, 모집중만 보이게 좁히는 것은
  * 클라이언트(COMP-SCR004-FILTER)의 역할로 둔다. 생성은 로그인+성인확인 완료
  * 사용자만 가능하며 안전수칙 동의와 연락처 미포함(SEC-008/MATE-009)을 서버에서
- * 재검증한다.
+ * 재검증한다. SCR-001의 "최근 동행글"(COMP-SCR001-MATE-SUMMARY)이 작성 시점 기준
+ * 최신 3개를 골라야 해서 created_at도 함께 반환한다.
  */
 
 const REQUIRED_FIELDS = [
@@ -46,7 +47,7 @@ export async function GET() {
   const { data, error } = await supabase
     .from("mate_posts")
     .select(
-      "post_id, country, region, start_date, end_date, travel_style_tags, title, status",
+      "post_id, country, region, start_date, end_date, travel_style_tags, title, status, created_at",
     )
     .order("start_date", { ascending: true });
 

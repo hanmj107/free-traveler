@@ -30,7 +30,11 @@ test.describe("E2E-001 메인 페이지의 추천 여행지와 주요 CTA", () =
     // 주요 CTA: "대표 소개 보기" -> SCR-002(/about).
     // (design-reference/SCREEN_ROUTE_CONTRACT.json required_navigation: SCR-001 free_traveler
     //  요약 Section -> SCR-002, trigger "대표 소개 보기" 버튼)
-    const aboutCta = page.getByRole("link", { name: /대표\s*소개/ });
+    // Header 내비·Footer에도 "대표 소개" 링크가 있어 <main> 안의 요약 Section
+    // CTA로 범위를 좁힌다(strict mode 다중 매치 방지).
+    const aboutCta = page
+      .getByRole("main")
+      .getByRole("link", { name: /대표\s*소개/ });
     await expect(aboutCta).toBeVisible();
     await expect(aboutCta).toHaveAttribute("href", "/about");
   });
