@@ -7,6 +7,18 @@ import type { NextConfig } from "next";
 // 영향이 없다.
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1", "localhost"],
+  // 실제로 렌더링하는 이미지는 전부 picsum.photos(placeholder stock photo)뿐이다
+  // (src/data/destinations.ts, src/data/about.ts). 지금은 어떤 화면도
+  // next/image의 <Image>를 쓰지 않아 당장 필요하지는 않지만, 나중에 도입할
+  // 때를 대비해 실제 사용 Host만 미리 등록해 둔다.
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

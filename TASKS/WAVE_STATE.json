@@ -355,12 +355,12 @@
         "CHECK-MANUAL-PERFORMANCE",
         "RELEASE-CHECK-VERCEL-SUPABASE"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "checkpoint_required": false,
       "checkpoint_result": null,
       "task_status": {
-        "CHECK-MANUAL-PERFORMANCE": "pending",
-        "RELEASE-CHECK-VERCEL-SUPABASE": "pending"
+        "CHECK-MANUAL-PERFORMANCE": "in_progress",
+        "RELEASE-CHECK-VERCEL-SUPABASE": "in_progress"
       }
     }
   ]
