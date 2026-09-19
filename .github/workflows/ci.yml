@@ -50,11 +50,54 @@ jobs:
       - name: Build
         run: npm run build
 
-  # Job 2 — 로그인이 필요 없는 공개 화면 Playwright(Chromium) Smoke만 실행한다.
+  # Job 2 — RLS 기본 정책 검증(TEST-RLS-BASIC). 로컬 임시 Postgres 컨테이너에
+  # migrations + seed.sql을 적용해 pgTAP(supabase/tests/rls_basic.sql)과
+  # 클라이언트 레벨 Integration Test(tests/integration/rls.spec.ts)를 실행한다.
+  # 실제(live) Supabase 프로젝트는 이 Job에서 절대 건드리지 않는다.
+  rls-integration:
+    name: rls-integration
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start local Supabase stack
+        run: supabase start
+
+      - name: Run pgTAP RLS tests (supabase/tests/rls_basic.sql)
+        run: supabase test db
+
+      - name: Export local Supabase URL/anon key for the integration test
+        run: |
+          supabase status -o env \
+            --override-name api.url=NEXT_PUBLIC_SUPABASE_URL \
+            --override-name anon_key=NEXT_PUBLIC_SUPABASE_ANON_KEY \
+            >> "$GITHUB_ENV"
+
+      - name: Client-level RLS integration test
+        run: npx vitest run tests/integration/rls.spec.ts
+
+  # Job 3 — 로그인이 필요 없는 공개 화면 Playwright(Chromium) Smoke만 실행한다.
   # Supabase Secret 없이도 통과해야 하므로 인증 관련 환경변수를 설정하지 않는다.
-  # 인증이 필요한 Smoke(E2E-006~007, tests/e2e/auth-smoke.spec.ts)는 이 Workflow의
-  # 필수 Gate에 포함하지 않는다(E2E_TEST_USER_EMAIL/PASSWORD가 없으면 그 파일 자체가
-  # 스스로 skip한다 — tests/e2e/auth-smoke.spec.ts 참고).
+  # 인증이 필요한 Smoke(E2E-006~010, tests/e2e/mate-auth.spec.ts·
+  # tests/e2e/travel-tools.spec.ts)는 실제 Supabase 프로젝트 URL/anon key
+  # (Repository Secrets)가 필요해 이 Workflow의 필수 Gate에 포함하지 않는다 —
+  # 값을 등록하면 별도 Job으로 추가할 수 있다.
   public-smoke:
     name: public-smoke
     needs: quality
